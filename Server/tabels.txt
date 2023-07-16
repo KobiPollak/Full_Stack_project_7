@@ -1,0 +1,15 @@
+CREATE TABLE propertis (street_name VARCHAR(255), house_number INT, number_of_apartments INT, PRIMARY KEY (street_name, house_number))
+
+ALTER TABLE tenants
+ADD CONSTRAINT building_must_exist
+FOREIGN KEY (streetName, hoseNumber)
+REFERENCES propertis (street_name, house_number);
+
+CREATE TABLE elevators (code INT AUTO_INCREMENT PRIMARY KEY, number_of_passengers INT, manufacturer VARCHAR(255), operating_cost INT)
+
+CREATE TABLE elevators_manufacturer (name VARCHAR(255) PRIMARY KEY, phone INT, email VARCHAR(255))
+
+ALTER TABLE elevators
+ADD CONSTRAINT manufacturer_must_exist
+FOREIGN KEY (manufacturer)
+REFERENCES elevators_manufacturer (name);
