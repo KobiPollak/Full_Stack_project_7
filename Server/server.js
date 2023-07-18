@@ -41,12 +41,12 @@ app.post("/login", (req, res) => {
     // console.log(userName, password);
     console.log("Connected!");
 
-    const sql = `SELECT * FROM passwords as p join tenants as t ON p.email = t.email where p.email='${email}' and p.password='${password}'`;
+    const sql = `SELECT * FROM passwords  `;
 
     con.query(sql, function (err, results, fields) {
       if (err) throw err;
       console.log("query done");
-
+      console.log(results);
       if (results.length === 0) {
         res.status(401).json({ error: "Invalid email or password" });
       } else {
@@ -61,46 +61,46 @@ app.post("/login", (req, res) => {
   });
 });
 
-app.post("/login", (req, res) => {
-  const { email, password, fullName, address, city, phoneNumber, apartment } =
-    req.body;
-  console.log(email, password, "fffff");
-  if (
-    !email ||
-    !password ||
-    !fullName ||
-    !address ||
-    !city ||
-    !phoneNumber ||
-    !apartment
-  ) {
-    res.status(400).json({ error: "not all the data were submitted" });
-    return;
-  }
-  con.connect(function (err) {
-    if (err) throw err;
-    // console.log(userName, password);
-    console.log("Connected!");
+// app.post("/login", (req, res) => {
+//   const { email, password, fullName, address, city, phoneNumber, apartment } =
+//     req.body;
+//   console.log(email, password, "fffff");
+//   if (
+//     !email ||
+//     !password ||
+//     !fullName ||
+//     !address ||
+//     !city ||
+//     !phoneNumber ||
+//     !apartment
+//   ) {
+//     res.status(400).json({ error: "not all the data were submitted" });
+//     return;
+//   }
+//   con.connect(function (err) {
+//     if (err) throw err;
+//     // console.log(userName, password);
+//     console.log("Connected!");
 
-    const sql = `SELECT * FROM passwords as p join tenants as t ON p.email = t.email where p.email='${email}' and p.password='${password}'`;
+//     const sql = `SELECT * FROM passwords as p join tenants as t ON p.email = t.email where p.email='${email}' and p.password='${password}'`;
 
-    con.query(sql, function (err, results, fields) {
-      if (err) throw err;
-      console.log("query done");
+//     con.query(sql, function (err, results, fields) {
+//       if (err) throw err;
+//       console.log("query done");
 
-      if (results.length === 0) {
-        res.status(401).json({ error: "Invalid email or password" });
-      } else {
-        console.log(results[0].id);
-        const user = { id: results[0].id };
-        const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
+//       if (results.length === 0) {
+//         res.status(401).json({ error: "Invalid email or password" });
+//       } else {
+//         console.log(results[0].id);
+//         const user = { id: results[0].id };
+//         const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
 
-        res.statusCode = 200;
-        res.status(200).json({ accessToken: accessToken, id: results[0].id });
-      }
-    });
-  });
-});
+//         res.statusCode = 200;
+//         res.status(200).json({ accessToken: accessToken, id: results[0].id });
+//       }
+//     });
+//   });
+// });
 
 const port = 3100; // or any port number you prefer
 app.listen(port, () => {
