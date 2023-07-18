@@ -11,7 +11,7 @@ import {
 
 import NotFound from "./components/notFound";
 import SignIn from "./components/signIn";
-import SignUp from "./components/logUp";
+import SignUp from "./components/signUp";
 import Application from "./components/application";
 
 function App() {

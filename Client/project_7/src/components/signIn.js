@@ -42,21 +42,11 @@ export default function SignIn() {
         .then((user) => {
           console.log(user.data);
           localStorage.setItem(`${user.data.id}`, user.data.accessToken);
-          // setData(user);
-          // localStorage.setItem("user", JSON.stringify(user));
-          // console.log("navigate");
           navigate(`/application/${user.data.id}`);
         })
         .catch((err) => alert(err));
     }
     fetchData();
-
-    // alert("submuted");
-    // const data = new FormData(event.currentTarget);
-    // console.log({
-    //   email: data.get("email"),
-    //   password: data.get("password"),
-    // });
   };
 
   const handleNavigation = () => {
