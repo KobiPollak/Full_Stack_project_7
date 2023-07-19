@@ -224,13 +224,21 @@ export default function SignUp() {
     event.preventDefault();
 
     const fullName = event.target.fullName.value;
-    const phoneNumber = event.target.phone;
+    const phoneNumber = event.target.phoneNumber.value;
     const address = event.target.address.value;
     const city = event.target.city.value;
     const apartment = event.target.apartment.value;
     const email = event.target.email.value;
     const password = event.target.password.value;
-
+    console.log(
+      fullName,
+      phoneNumber,
+      address,
+      city,
+      apartment,
+      email,
+      password
+    );
     if (
       !email ||
       !password ||
@@ -246,7 +254,7 @@ export default function SignUp() {
 
     async function fetchData() {
       axios
-        .post("http://localhost:3100/logup", {
+        .post("http://localhost:3100/logUp", {
           email: email,
           password: password,
           fullName: fullName,

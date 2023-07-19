@@ -17,6 +17,13 @@ var con = mysql.createConnection({
   database: "project7",
 });
 
+var poll = mysql.createPool({
+  host: "localhost",
+  user: "root",
+  password: "Kobi09pollak",
+  database: "project7",
+});
+
 function authenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
@@ -41,7 +48,7 @@ app.post("/login", (req, res) => {
     // console.log(userName, password);
     console.log("Connected!");
 
-    const sql = `SELECT * FROM passwords  `;
+    const sql = `SELECT * FROM passwords  where email="${email}" and password="${password}"`;
 
     con.query(sql, function (err, results, fields) {
       if (err) throw err;
@@ -50,57 +57,107 @@ app.post("/login", (req, res) => {
       if (results.length === 0) {
         res.status(401).json({ error: "Invalid email or password" });
       } else {
-        console.log(results[0].id);
-        const user = { id: results[0].id };
+        console.log(results[0].email);
+        const user = { email: email };
         const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
 
         res.statusCode = 200;
-        res.status(200).json({ accessToken: accessToken, id: results[0].id });
+        res.status(200).json({ accessToken: accessToken, email: email });
       }
     });
   });
 });
 
-// app.post("/login", (req, res) => {
-//   const { email, password, fullName, address, city, phoneNumber, apartment } =
-//     req.body;
-//   console.log(email, password, "fffff");
-//   if (
-//     !email ||
-//     !password ||
-//     !fullName ||
-//     !address ||
-//     !city ||
-//     !phoneNumber ||
-//     !apartment
-//   ) {
-//     res.status(400).json({ error: "not all the data were submitted" });
-//     return;
-//   }
-//   con.connect(function (err) {
-//     if (err) throw err;
-//     // console.log(userName, password);
-//     console.log("Connected!");
+app.post("/logUp", (req, res) => {
+  const { email, password, fullName, address, city, phoneNumber, apartment } =
+    req.body;
+  console.log(email, password, "fffff");
+  if (
+    !email ||
+    !password ||
+    !fullName ||
+    !address ||
+    !city ||
+    !phoneNumber ||
+    !apartment
+  ) {
+    res.status(400).json({ error: "not all the data were submitted" });
+    return;
+  }
+  poll.getConnection((err, connection) => {
+    if (err) {
+      console.error("Error getting connection from con:", err);
+      return;
+    }
 
-//     const sql = `SELECT * FROM passwords as p join tenants as t ON p.email = t.email where p.email='${email}' and p.password='${password}'`;
+    // Begin the transaction
+    connection.beginTransaction((err) => {
+      if (err) {
+        console.error("Error starting transaction:", err);
+        connection.release();
+        return;
+      }
 
-//     con.query(sql, function (err, results, fields) {
-//       if (err) throw err;
-//       console.log("query done");
+      const tenantsInsert =
+        "INSERT INTO tenants (fullName, phone, email, address, city, apartment) VALUES (?, ?, ?, ?, ?, ?)";
+      // Perform the first SQL query
+      connection.query(
+        tenantsInsert,
+        [fullName, phoneNumber, email, address, city, apartment],
+        (err, results) => {
+          if (err) {
+            console.error("Error executing first query:", err);
+            connection.rollback(() => {
+              connection.release();
+            });
+            return;
+          }
 
-//       if (results.length === 0) {
-//         res.status(401).json({ error: "Invalid email or password" });
-//       } else {
-//         console.log(results[0].id);
-//         const user = { id: results[0].id };
-//         const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
+          const passwordInsert =
+            "INSERT INTO passwords (email, password) VALUES (?, ?)";
+          // Perform the second SQL query
+          connection.query(
+            passwordInsert,
+            [email, password],
+            (err, results) => {
+              if (err) {
+                console.error("Error executing second query:", err);
+                connection.rollback(() => {
+                  connection.release();
+                });
+                return;
+              }
 
-//         res.statusCode = 200;
-//         res.status(200).json({ accessToken: accessToken, id: results[0].id });
-//       }
-//     });
-//   });
-// });
+              // Commit the transaction if both queries were successful
+              connection.commit((err) => {
+                if (err) {
+                  console.error("Error committing transaction:", err);
+                  connection.rollback(() => {
+                    connection.release();
+                  });
+                  return;
+                }
+                const user = { email: email };
+                const accessToken = jwt.sign(
+                  user,
+                  process.env.ACCESS_TOKEN_SECRET
+                );
+
+                res.statusCode = 200;
+                res
+                  .status(200)
+                  .json({ accessToken: accessToken, email: email });
+                // Both queries were successful and the transaction was committed
+                connection.release();
+                console.log("Transaction completed successfully.");
+              });
+            }
+          );
+        }
+      );
+    });
+  });
+});
 
 const port = 3100; // or any port number you prefer
 app.listen(port, () => {
