@@ -1,16 +1,16 @@
-import express from "express";
-import bodyParser from "body-parser";
-import cors from "cors";
-import jwt from "jsonwebtoken";
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import jwt from 'jsonwebtoken';
 
-import { doesUserExist } from "../control/User.js";
+import { doesUserExist, getUserByEmailAndPassword } from '../control/User.js';
 import {
   checkReqUserLogUpData,
   checkReqUserLogInData,
-} from "../midddleware/midddleware.js";
-import { createNewTenant } from "../models/userDB.js";
+} from '../midddleware/midddleware.js';
+import { createNewTenant } from '../models/userDB.js';
 const router = express.Router();
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 dotenv.config();
 
 // const app = express();
@@ -19,13 +19,14 @@ dotenv.config();
 // app.use(cors());
 // app.use(bodyParser.json());
 
-router.post("/logUp", checkReqUserLogUpData, doesUserExist, createNewTenant);
+router.post('/logUp', checkReqUserLogUpData, doesUserExist, createNewTenant);
 
-router.post("/logIn", checkReqUserLogInData, (req, res) => {
-  con.connect(function (err) {
-    if (err) throw err;
-    // console.log(userName, password);
-  });
-});
+router.post('/logIn', checkReqUserLogInData, getUserByEmailAndPassword);
+// (req, res) => {
+//   con.connect(function (err) {
+//     if (err) throw err;
+//     // console.log(userName, password);
+//   });
+// };
 
 export default router;
