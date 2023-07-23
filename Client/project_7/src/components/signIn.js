@@ -35,7 +35,7 @@ export default function SignIn() {
 
     async function fetchData() {
       axios
-        .post("http://localhost:3100/login", {
+        .post("http://localhost:3100/users/login", {
           email: email,
           password: password,
         })

@@ -254,7 +254,7 @@ export default function SignUp() {
 
     async function fetchData() {
       axios
-        .post("http://localhost:3100/logUp", {
+        .post("http://localhost:3100/users/logUp", {
           email: email,
           password: password,
           fullName: fullName,
