@@ -1,5 +1,5 @@
-import logo from "./logo.svg";
-import "./App.css";
+import logo from './logo.svg';
+import './App.css';
 
 import {
   BrowserRouter,
@@ -7,23 +7,49 @@ import {
   Route,
   redirect as Redirect,
   Navigate,
-} from "react-router-dom";
+} from 'react-router-dom';
 
-import NotFound from "./components/notFound";
-import SignIn from "./components/signIn";
-import SignUp from "./components/signUp";
-import Application from "./components/application";
+import NotFound from './components/notFound';
+import SignIn from './components/signIn';
+import SignUp from './components/signUp';
+import Application from './components/application';
+import PaymentPage from './components/payment';
 
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/signIn" replace />} />
-          <Route path="/signIn" element={<SignIn />} />
-          <Route path="/signUp" element={<SignUp />} />
-          <Route path="/application/:id" element={<Application />}></Route>
-          <Route path="*" element={<NotFound />}></Route>
+          <Route
+            path="/"
+            element={
+              <Navigate
+                to="/signIn"
+                replace
+              />
+            }
+          />
+          <Route
+            path="/signIn"
+            element={<SignIn />}
+          />
+          <Route
+            path="/signUp"
+            element={<SignUp />}
+          />
+          <Route
+            path="/application/:id"
+            element={<Application />}
+          ></Route>
+          <Route
+            path="/application/:id/payment"
+            element={<PaymentPage />}
+          ></Route>
+
+          <Route
+            path="*"
+            element={<NotFound />}
+          ></Route>
         </Routes>
       </BrowserRouter>
       {/* <div className="App">
