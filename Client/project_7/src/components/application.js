@@ -1,3 +1,4 @@
+import { useParams, useNavigate } from "react-router-dom";
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -23,11 +24,13 @@ interface Props {
 }
 
 const drawerWidth = 240;
-const navItems = ["Home", "About", "Contact", "Reports", "Log Out"];
+const navItems = ["Home", "Payments", "Contact", "Reports", "Log Out"];
 
 export default function DrawerAppBar(props: Props) {
   const { window } = props;
+  const { id } = useParams();
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const navigate = useNavigate();
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -35,12 +38,39 @@ export default function DrawerAppBar(props: Props) {
 
   const handleNavItemClicked = (item) => {
     alert(item);
+    switch (item) {
+      case "Home":
+        // Code to handle "Home" menu option
+        console.log("Navigating to Home page");
+        break;
+      case "Payments":
+        navigate(`/signIn`);
+        // Code to handle "About" menu option
+        console.log("Navigating to About page");
+        break;
+      case "Contact":
+        // Code to handle "Contact" menu option
+        console.log("Navigating to Contact page");
+        break;
+      case "Reports":
+        // Code to handle "Reports" menu option
+        console.log("Navigating to Reports page");
+        break;
+      case "Log Out":
+        // Code to handle "Log Out" menu option
+        localStorage.removeItem(`${id}`);
+        navigate(`/signIn`);
+        console.log("Logging out...");
+        break;
+      default:
+        console.log("Invalid option");
+    }
   };
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
       <Typography variant="h6" sx={{ my: 2 }}>
-        XXXXXXX
+        My-Home
       </Typography>
       <Divider />
       <List>
@@ -80,7 +110,7 @@ export default function DrawerAppBar(props: Props) {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
           >
-            XXXXXXX
+            My-Home
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navItems.map((item) => (

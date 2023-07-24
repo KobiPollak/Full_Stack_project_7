@@ -41,7 +41,7 @@ export default function SignIn() {
         })
         .then((user) => {
           console.log(user.data);
-          localStorage.setItem(`${user.data.id}`, user.data.accessToken);
+          localStorage.setItem(`${user.data.email}`, user.data.accessToken);
           navigate(`/application/${user.data.id}`);
         })
         .catch((err) => alert(err));

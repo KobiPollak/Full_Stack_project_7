@@ -268,7 +268,7 @@ export default function SignUp() {
           localStorage.setItem(`${user.data.id}`, user.data.accessToken);
           navigate(`/application/${user.data.id}`);
         })
-        .catch((err) => alert(err));
+        .catch((err) => console.log(err));
     }
     fetchData();
 
