@@ -1,7 +1,8 @@
-import { getUserEmail, getUserByEmail } from "../models/userDB.js";
+import { getUserEmail, getUserByEmail } from '../models/userDB.js';
+import jwt from 'jsonwebtoken';
 
 async function doesUserExist(req, res, next) {
-  console.log("in function doesUserExist");
+  console.log('in function doesUserExist');
   //   try {
   // console.log('hey beck');
   // console.log(req);
@@ -11,7 +12,7 @@ async function doesUserExist(req, res, next) {
     .then((user) => {
       console.log(user[0]);
       if (user[0].length > 0) {
-        return res.status(401).send({ error: "user is exists." });
+        return res.status(401).send({ error: 'user is exists.' });
       }
       next();
     })
@@ -21,7 +22,7 @@ async function doesUserExist(req, res, next) {
     });
 }
 async function getUser(req, res, next) {
-  console.log("in function getUser");
+  console.log('in function getUser');
   //   try {
   // console.log('hey beck');
   // console.log(req);
@@ -31,7 +32,7 @@ async function getUser(req, res, next) {
     .then((user) => {
       console.log(user[0]);
       if (user[0].length > 0) {
-        return res.status(401).send({ error: "user is exists." });
+        return res.status(401).send({ error: 'user is exists.' });
       }
       next();
     })
@@ -41,6 +42,7 @@ async function getUser(req, res, next) {
     });
 }
 async function getUserByEmailAndPassword(req, res) {
+  console.log('in function getUserByEmailAndPassword');
   const userForDb = req.body;
   const user = await getUserByEmail(userForDb).then((table) => {
     if (table[0].length === 0) {
