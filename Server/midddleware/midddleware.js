@@ -29,7 +29,7 @@ function checkReqUserLogUpData(req, res, next) {
   next();
 }
 
-function checkReqUserLogInData(req, res, next) {
+function checkReqLogInData(req, res, next) {
   console.log("in function checkReqUserData");
   const { email, password } = req.body;
   console.log(email, password, "fffff");
@@ -39,4 +39,4 @@ function checkReqUserLogInData(req, res, next) {
   next();
 }
 
-export { checkReqUserLogUpData, checkReqUserLogInData };
+export { checkReqUserLogUpData, checkReqLogInData };

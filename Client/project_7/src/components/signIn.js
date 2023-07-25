@@ -14,6 +14,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
@@ -21,6 +22,8 @@ const defaultTheme = createTheme();
 
 export default function SignIn() {
   const navigate = useNavigate();
+
+  const [manager, setManager] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -33,7 +36,7 @@ export default function SignIn() {
       return;
     }
 
-    async function fetchData() {
+    async function fetchUserData() {
       axios
         .post("http://localhost:3100/users/login", {
           email: email,
@@ -46,11 +49,37 @@ export default function SignIn() {
         })
         .catch((err) => alert(err));
     }
-    fetchData();
+
+    async function fetchManagerData() {
+      axios
+        .post("http://localhost:3100/manager/login", {
+          email: email,
+          password: password,
+        })
+        .then((user) => {
+          console.log(user.data);
+          localStorage.setItem(`${user.data.email}`, user.data.accessToken);
+          navigate(`/m-application/${user.data.id}`);
+        })
+        .catch((err) => alert(err));
+    }
+    if (manager) {
+      fetchManagerData();
+    } else {
+      fetchUserData();
+    }
   };
 
-  const handleNavigation = () => {
-    navigate("/signUp");
+  const handleNavigation = (type) => {
+    if (type === "signUp") {
+      navigate("/signUp");
+    } else {
+      navigate();
+    }
+  };
+
+  const handleManagementCheckboxClick = () => {
+    setManager(!manager);
   };
 
   return (
@@ -97,6 +126,16 @@ export default function SignIn() {
               id="password"
               autoComplete="current-password"
             />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  value="management"
+                  color="primary"
+                  onClick={handleManagementCheckboxClick}
+                />
+              }
+              label="management?"
+            />
             <Button
               type="submit"
               fullWidth
@@ -106,15 +145,18 @@ export default function SignIn() {
               Sign In
             </Button>
             <Grid container>
-              {/* <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
+              <Grid item xs>
+                <Link
+                  onClick={() => handleNavigation("management")}
+                  variant="body2"
+                >
+                  management?
                 </Link>
-              </Grid> */}
+              </Grid>
               <Grid item>
                 <Link
                   style={{ cursor: "pointer" }}
-                  onClick={handleNavigation}
+                  onClick={() => handleNavigation("signUp")}
                   variant="body2"
                 >
                   {"Don't have an account? Sign Up"}
