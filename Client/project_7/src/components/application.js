@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Outlet } from "react-router-dom";
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -37,14 +37,15 @@ export default function DrawerAppBar(props: Props) {
   };
 
   const handleNavItemClicked = (item) => {
-    alert(item);
+    // alert(item);
     switch (item) {
       case "Home":
+        navigate(`/application/${id}/details`);
         // Code to handle "Home" menu option
         console.log("Navigating to Home page");
         break;
       case "Payments":
-        navigate(`/signIn`);
+        navigate(`/application/${id}/payment`);
         // Code to handle "About" menu option
         console.log("Navigating to About page");
         break;
@@ -147,7 +148,8 @@ export default function DrawerAppBar(props: Props) {
       </Box>
       <Box component="main" sx={{ p: 3 }}>
         <Toolbar />
-        <Typography>text...</Typography>
+        {/* <Typography>text...</Typography> */}
+        <Outlet />
       </Box>
     </Box>
   );
