@@ -12,7 +12,7 @@ async function getUserEmail(user) {
 async function getUserByEmail(user) {
   console.log("in function getUserByEmail");
   console.log(user.apartment);
-  const sql = `SELECT * FROM tenants INNER JOIN password ON tenants.email = password.email where email="${user.email}" and password="${user.password}`;
+  const sql = `SELECT * FROM tenants INNER JOIN passwords as p ON tenants.email = p.email where p.email="${user.email}" and password="${user.password}"`;
   const res = pool.query(sql);
   //   console.log(JSON.parse(res[0]));
   return res;
@@ -95,6 +95,15 @@ function createNewTenant(req, res) {
   });
 }
 
+async function getUserDetails(id) {
+  console.log(id);
+  console.log("in function getUserDetails");
+  const sql = `SELECT fullName, phone, email, t.address, t.city, apartment, day_of_week, collection_time, base_payment_amount, extra_payment_amount, extra_payment_description FROM tenants as t JOIN properties as p ON t.address = p.address and t.city = p.city JOIN GarbageRemoval as g ON p.id=g.property_id JOIN basepayment as b ON p.id=b.property_id JOIN extrapayment as e ON p.id=e.property_id where t.id=${id}`;
+  const res = pool.query(sql);
+  //   console.log(JSON.parse(res[0]));
+  return res;
+}
+
 function checkUser(req, res) {
   const { email, password } = req.body;
   console.log("Connected!");
@@ -118,4 +127,4 @@ function checkUser(req, res) {
   });
 }
 
-export { createNewTenant, getUserEmail, getUserByEmail };
+export { createNewTenant, getUserEmail, getUserByEmail, getUserDetails };
