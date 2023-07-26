@@ -127,4 +127,29 @@ function checkUser(req, res) {
   });
 }
 
-export { createNewTenant, getUserEmail, getUserByEmail, getUserDetails };
+async function insertNewReport(req) {
+  // const image = req.files.image;
+  const { id, location, description, image, type } = req.body;
+  const imageBuffer = Buffer.from(image, "base64");
+  const data = new Date();
+  let property_id = await pool
+    .query(
+      `SELECT p.id FROM tenants as t JOIN properties as p ON t.address = p.address and t.city = p.city WHERE t.id=${id}`
+    )
+    .then((table) => {
+      return table[0][0].id;
+    });
+  const sql = `INSERT INTO reports (property_id, description, date_reported, status, type, location, image)
+    VALUES (${property_id}, '${description}', '${data}', 'Open', '${type}', '${location}', ${imageBuffer})`;
+  const res = pool.query(sql);
+  //   console.log(JSON.parse(res[0]));
+  return res;
+}
+
+export {
+  createNewTenant,
+  getUserEmail,
+  getUserByEmail,
+  getUserDetails,
+  insertNewReport,
+};

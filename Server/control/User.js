@@ -2,6 +2,7 @@ import {
   getUserEmail,
   getUserByEmail,
   getUserDetails,
+  insertNewReport,
 } from "../models/userDB.js";
 import jwt from "jsonwebtoken";
 
@@ -76,4 +77,10 @@ async function usersDetails(req, res) {
   });
 }
 
-export { doesUserExist, getUserByEmailAndPassword, usersDetails };
+async function addReport(req, res) {
+  await insertNewReport(req).then((data) => {
+    console.log(data[0]);
+  });
+}
+
+export { doesUserExist, getUserByEmailAndPassword, usersDetails, addReport };

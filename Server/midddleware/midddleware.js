@@ -39,4 +39,14 @@ function checkReqLogInData(req, res, next) {
   next();
 }
 
-export { checkReqUserLogUpData, checkReqLogInData };
+function checkInput(req, res, next) {
+  console.log("in function checkInput");
+  // const image = req.files.image;
+  const { id, location, description, image } = req.body;
+  if (!image || !id || !location || !description) {
+    return res.status(400).json({ error: "not all the data were submitted" });
+  }
+  next();
+}
+
+export { checkReqUserLogUpData, checkReqLogInData, checkInput };
