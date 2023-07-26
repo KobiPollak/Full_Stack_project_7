@@ -5,6 +5,7 @@ import {
   insertNewReport,
 } from "../models/userDB.js";
 import jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 async function doesUserExist(req, res, next) {
   console.log("in function doesUserExist");
@@ -47,6 +48,7 @@ async function getUser(req, res, next) {
     });
 }
 async function getUserByEmailAndPassword(req, res) {
+  console.log("in function getUserByEmailAndPassword");
   const userForDb = req.body;
   const user = await getUserByEmail(userForDb)
     .then((table) => {

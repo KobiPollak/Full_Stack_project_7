@@ -22,4 +22,9 @@ async function checkManagerLogIn(req, res) {
     .catch((err) => console.log(err));
 }
 
+async function getProperties(){
+  const id = req.params.id;
+  await 
+}
+
 export { checkManagerLogIn };
