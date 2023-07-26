@@ -146,12 +146,6 @@ export default function SignIn() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link
-                  onClick={() => handleNavigation("management")}
-                  variant="body2"
-                >
-                  management?
-                </Link>
               </Grid>
               <Grid item>
                 <Link

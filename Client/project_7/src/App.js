@@ -16,6 +16,7 @@ import Application from "./components/application";
 import PaymentPage from "./components/payment";
 import Details from "./components/details";
 import ManagerApplication from "./components/managerApplication";
+import Reports from "./components/reports";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
               element={<Details />}
             />
             <Route path="/application/:id/payment" element={<PaymentPage />} />
+            <Route path="/application/:id/reports" element={<Reports />} />
           </Route>
           <Route path="/m-application/:id" element={<ManagerApplication />} />
           <Route path="*" element={<NotFound />}></Route>
