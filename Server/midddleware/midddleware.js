@@ -1,10 +1,15 @@
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-  if (token == null) return res.status(401);
+import jwt from "jsonwebtoken";
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, id) => {
+async function authenticateToken(req, res, next) {
+  const authHeader = req.headers.authorization;
+  // console.log(req.headers.authorization);
+  // const token = authHeader && authHeader.split(" ")[1];
+  // console.log(token);
+  if (authHeader == null) return res.status(401);
+
+  jwt.verify(authHeader, process.env.ACCESS_TOKEN_SECRET, (err, id) => {
     if (err) return res.status(403);
+    console.log("yey");
     req.id = id;
     next();
   });
@@ -27,15 +32,15 @@ function checkReqPaymentData(req, res, next) {
       amount,
     } = req.body;
     console.log(cardNumber);
-    if (!cardNumber) console.log('Missing card number data');
-    else if (!id) console.log('Missing id data');
-    else if (!expirationMonth) console.log('Missing expiration month data');
-    else if (!expirationYear) console.log('Missing expiration year data');
-    else if (!amount) console.log('Missing amont data');
-    else if (!cardType) console.log('Missing card type data');
-    else if (!cardHolderName) console.log('Missing card holder name data');
-    else if (!reason) console.log('Missing reason data');
-    else if (!formattedMonth) console.log('Missing formattedMonth data');
+    if (!cardNumber) console.log("Missing card number data");
+    else if (!id) console.log("Missing id data");
+    else if (!expirationMonth) console.log("Missing expiration month data");
+    else if (!expirationYear) console.log("Missing expiration year data");
+    else if (!amount) console.log("Missing amount data");
+    else if (!cardType) console.log("Missing card type data");
+    else if (!cardHolderName) console.log("Missing card holder name data");
+    else if (!reason) console.log("Missing reason data");
+    else if (!formattedMonth) console.log("Missing formattedMonth data");
   } catch {
     return res.status(400).json({ error: 'not all the data were submitted' });
   }
@@ -74,8 +79,9 @@ function checkReqLogInData(req, res, next) {
 function checkInput(req, res, next) {
   console.log("in function checkInput");
   // const image = req.files.image;
-  const { id, location, description, image } = req.body;
-  if (!image || !id || !location || !description) {
+  console.log(req.id);
+  const { id, location, description, image, type } = req.body;
+  if (!image || !id || !location || !description || !type) {
     return res.status(400).json({ error: "not all the data were submitted" });
   }
   next();
@@ -86,4 +92,5 @@ export {
   checkReqLogInData,
   checkInput,
   checkReqPaymentData,
+  authenticateToken,
 };

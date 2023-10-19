@@ -1,24 +1,26 @@
-import { pool, con, pool1 } from './connection.js';
-import jwt from 'jsonwebtoken';
+import { pool, con, pool1 } from "./connection.js";
+import jwt from "jsonwebtoken";
 
 async function getUserEmail(user) {
-  console.log('in function getUserEmail');
+  console.log("in function getUserEmail");
   console.log(user.apartment);
   const sql = `SELECT * FROM tenants where email="${user.email}" or (address="${user.address}" and apartment="${user.apartment}" and city="${user.city}")`;
   const res = pool.query(sql);
   //   console.log(JSON.parse(res[0]));
   return res;
 }
+
 async function getUserByEmail(user) {
-  console.log('in function getUserByEmail');
+  console.log("in function getUserByEmail");
   console.log(user.apartment);
   const sql = `SELECT * FROM tenants INNER JOIN passwords as p ON tenants.email = p.email where p.email="${user.email}" and password="${user.password}"`;
   const res = pool.query(sql);
   //   console.log(JSON.parse(res[0]));
   return res;
 }
+
 function createNewTenant(req, res) {
-  console.log('in function createNewTenant');
+  console.log("in function createNewTenant");
   const { email, password, fullName, address, city, phoneNumber, apartment } =
     req.body;
   pool1.getConnection((err, connection) => {
@@ -97,10 +99,9 @@ function createNewTenant(req, res) {
 
 async function getUserDetails(id) {
   console.log(id);
-  console.log('in function getUserDetails');
-  const sql = `SELECT fullName, phone, email, t.address, t.city, apartment, day_of_week, collection_time, base_payment_amount, extra_payment_amount, extra_payment_description FROM tenants as t JOIN properties as p ON t.address = p.address and t.city = p.city JOIN GarbageRemoval as g ON p.id=g.property_id JOIN basepayment as b ON p.id=b.property_id JOIN extrapayment as e ON p.id=e.property_id where t.id=${id}`;
-  const res = pool.query(sql);
-  //   console.log(JSON.parse(res[0]));
+  console.log("in function getUserDetails");
+  const sql = `SELECT fullName, phone, email, t.address, t.city, apartment, day_of_week, collection_time, base_payment_amount, extra_payment_amount, extra_payment_description FROM tenants as t JOIN properties as p ON t.address = p.address and t.city = p.city JOIN GarbageRemoval as g ON p.id=g.property_id JOIN basepayment as b ON p.id=b.property_id JOIN extrapayment as e ON p.id=e.property_id where t.id=?`;
+  const res = pool.query(sql, [id]);
   return res;
 }
 
@@ -128,20 +129,31 @@ function checkUser(req, res) {
 }
 
 async function insertNewReport(req) {
-  // const image = req.files.image;
-  const { id, location, description, image, type } = req.body;
-  const imageBuffer = Buffer.from(image, "base64");
-  const data = new Date();
-  let property_id = await pool
-    .query(
-      `SELECT p.id FROM tenants as t JOIN properties as p ON t.address = p.address and t.city = p.city WHERE t.id=${id}`
-    )
-    .then((table) => {
-      return table[0][0].id;
-    });
-  const sql = `INSERT INTO reports (property_id, description, date_reported, status, type, location, image)
-    VALUES (${property_id}, '${description}', '${data}', 'Open', '${type}', '${location}', ${imageBuffer})`;
-  const res = pool.query(sql);
+  console.log("in function insertNewReport");
+  console.log(req.file);
+  const imagePath = req.file.path;
+  const { id, location, description, type } = req.body;
+  console.log(id, " ", location, " ", description, " ", type, " ", imagePath);
+  const date = new Date();
+  const property_id = await getPropertyIdByTenantId(id);
+  // let property_id = await pool
+  //   .query(
+  //     `SELECT p.id FROM tenants as t JOIN properties as p ON t.address = p.address and t.city = p.city WHERE t.id=?`,
+  //     [id]
+  //   )
+  //   .then((table) => {
+  //     return table[0].id;
+  //   });
+  const sql = `INSERT INTO reports (property_id, description, date_reported, status, type, location, image_path)
+    VALUES (?, ?, ?, 'Open', ?, ?, ?)`;
+  const res = pool.query(sql, [
+    property_id,
+    description,
+    date,
+    type,
+    location,
+    imagePath,
+  ]);
   //   console.log(JSON.parse(res[0]));
   return res;
 }
