@@ -146,10 +146,86 @@ async function insertNewReport(req) {
   return res;
 }
 
+async function createPaymentTransactionDb(req) {
+  console.log('in function createPaymentTransactionDb');
+
+  const {
+    id,
+    cardNumber,
+    cardType,
+    cardHolderName,
+    expirationYear,
+    expirationMonth,
+    reason,
+    formattedMonth,
+    amount,
+  } = req.body;
+  const [result] = await pool.query(
+    `
+    INSERT INTO payments (tenant_id, month, reason, card_type, card_number, card_holder_name,expiration_month,expiration_year,amount)
+    VALUES (?,?,?,?, ?, ?, ?, ?, ?)`,
+    [
+      id,
+      formattedMonth,
+      reason,
+      cardType,
+      cardNumber,
+      cardHolderName,
+      expirationMonth,
+      expirationYear,
+      amount,
+    ]
+  );
+  return result.insertId;
+}
+async function getPropertyIdByTenantId(tenantId) {
+  console.log('in function getPropertyIdByTenantId');
+  const sql1 = `SELECT address, city FROM tenants where id="${tenantId}" `;
+
+  // Change 'result' to 'results'
+  const [results] = await pool.query(sql1);
+  console.log(results);
+
+  const sql2 = `SELECT id FROM properties where address="${results[0].address}" and city="${results[0].city}"`;
+
+  const [final] = await pool.query(sql2);
+
+  console.log(final[0].id);
+
+  return final[0].id;
+}
+async function depositDb(property_id, amount) {
+  try {
+    const sql = `UPDATE bankaccounts SET moneyamount = moneyamount + ? WHERE property_id = ?`;
+
+    // Perform the UPDATE query to deposit the money
+    const [result] = await pool.query(sql, [amount, property_id]);
+
+    if (result.affectedRows === 0) {
+      // If no rows were affected, it means the property_id was not found
+      // You can handle this case according to your requirements (e.g., throw an error, return false, etc.)
+      console.log(`Property with ID ${property_id} not found.`);
+      return false;
+    }
+    console.log(
+      `Successfully deposited ${amount} into Property ID ${property_id}.`
+    );
+
+    // Return true to indicate that the deposit was successful
+    return true;
+  } catch (error) {
+    console.error('Error depositing money:', error);
+    return false;
+  }
+}
+
 export {
   createNewTenant,
   getUserEmail,
   getUserByEmail,
   getUserDetails,
   insertNewReport,
+  createPaymentTransactionDb,
+  getPropertyIdByTenantId,
+  depositDb,
 };

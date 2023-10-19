@@ -24,7 +24,7 @@ async function checkManagerLogIn(req, res) {
 
 async function getProperties(){
   const id = req.params.id;
-  await 
+  aw
 }
 
 export { checkManagerLogIn };

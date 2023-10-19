@@ -5,7 +5,6 @@ import {
   insertNewReport,
 } from "../models/userDB.js";
 import jwt from "jsonwebtoken";
-import jwt from "jsonwebtoken";
 
 async function doesUserExist(req, res, next) {
   console.log("in function doesUserExist");
