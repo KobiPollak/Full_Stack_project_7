@@ -8,13 +8,7 @@ const Details = () => {
   const { id } = useParams();
 
   const [response, setResponse] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const handleGetData = () => {
-    setLoading(true);
-
-    // Make the Axios request to your server API
-  };
   useEffect(() => {
     // Function to fetch data using Axios
     axios
