@@ -8,4 +8,16 @@ async function managerLogIn(user) {
   return res;
 }
 
-export { managerLogIn };
+async function getFualtByType(req, res) {
+  console.log('in function getFualtByType');
+  const sql = `SELECT * FROM reports where type="${req.params.selectedOption}" `;
+  const result = pool.query(sql);
+  console.log(result[0]);
+}
+async function getAllProperties(req, res) {
+  console.log('in function getAllPropertiesNumbers');
+  const sql = `SELECT id,city,address FROM properties  `;
+  const result = pool.query(sql);
+  console.log(result[0]);
+}
+export { managerLogIn, getFualtByType, getAllProperties };

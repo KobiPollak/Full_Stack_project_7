@@ -83,11 +83,16 @@ async function usersDetails(req, res) {
 
 async function addReport(req, res) {
   console.log("in function addReport");
-  await insertNewReport(req).then((data) => {
-    console.log(data[0]);
+  try {
+    const data = await insertNewReport(req);
     console.log(data[0].insertId);
-    return res.status(200).json(data[0].insertId);
-  });
+    return res
+    .status(200)
+    .json({ message: `your report number is: ${data[0].insertId}` });
+} catch (error) {
+  console.error('Error adding report:', error);
+  return res.status(500).json({ error: 'Error adding report' });
+}
 }
 
 async function createPaymentTransaction(req, res, next) {

@@ -17,6 +17,7 @@ import axios from "axios";
 
 const Reports = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   //   const classes = useStyles();
   //   const theme = createTheme({
   //     fileInput: {
@@ -30,6 +31,8 @@ const Reports = () => {
   //       cursor: "pointer",
   //     },
   //   });
+  axios.defaults.headers.common["authorization"] =
+  localStorage.getItem("token");
 
   const [selectedOption, setSelectedOption] = useState("");
   const [location, setLocation] = useState("");
@@ -62,46 +65,30 @@ const Reports = () => {
   };
 
   const handleGenerateReport = () => {
-    // Handle the logic to generate the report with the selectedOption, input1Value, input2Value, and selectedImage
-    // const formData = new FormData();
-    // formData.append("image", selectedImage);
-    // formData.append("additionalData", {
-    //   id: id,
-    //   location: location,
-    //   description: description,
-    //   type: selectedOption,
-    // });
-    // const data = {
-    //   image: selectedImage,
-    //   id: id,
-    //   location: location,
-    //   description: description,
-    //   type: selectedOption,
-    // };
-    // console.log(data);
+    console,log("in handleGenerateReport function")
+    if (!selectedImage) {
+      return;
+    }
+    const formData = new FormData();
+    console.log(id);
+    formData.append("id", id);
+    formData.append("image", selectedImage);
+    formData.append("description", description);
+    formData.append("location", location);
+    formData.append("type", selectedOption);
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const base64Image = reader.result.split(",")[1];
-      const data = {
-        image: base64Image,
-        id: id,
-        location: location,
-        description: description,
-        type: selectedOption,
-      };
-      // Send the base64-encoded image to the server
-      axios
-        .post("http://localhost:3100/users/report", data)
-        .then((response) => {
-          // Handle the response from the server if needed
-          console.log(response.data);
-        });
+    const headers = {
+      "Content-Type": "multipart/form-data", // Important for file upload
+      Authorization: localStorage.getItem("token"), // Set your token here
     };
-    reader.readAsDataURL(selectedImage);
-    // axios.post("http://localhost:3100/users/report", data).then((response) => {
-    //   console.log(response.data);
-    // });
+      
+    axios
+      .post("http://localhost:3100/users/report", formData, { headers })
+      .then((response) => {
+        // Handle the response from the server if needed
+        console.log(response.data.message);
+        navigate(`/application/${id}/goodReport/${response.data.message}`); 
+      });
 
     console.log("Generating report...");
   };
@@ -164,6 +151,7 @@ const Reports = () => {
               <input
                 type="file"
                 accept="image/*"
+                name="image"
                 id="image-upload"
                 onChange={handleImageChange}
               />

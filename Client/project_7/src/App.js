@@ -17,7 +17,9 @@ import PaymentPage from './components/payment';
 import Details from './components/details';
 import ManagerApplication from './components/managerApplication';
 import Reports from './components/reports';
+import GoodReport from './components/goodReport';
 import GoodPayment from './components/goodPayment';
+import MReports from './components/managerReports';
 
 function App() {
   return (
@@ -58,6 +60,10 @@ function App() {
               path="/application/:id/reports"
               element={<Reports />}
             />  
+            <Route
+              path="/application/:id/goodReport/:reportMessage"
+              element={<GoodReport />}
+            />
           </Route>
           <Route
             path="/application/:id/goodPayment"
@@ -66,7 +72,12 @@ function App() {
           <Route
             path="/m-application/:id"
             element={<ManagerApplication />}
-          />
+            >
+            <Route
+              path="/m-application/managerReports"
+              element={<MReports />}
+            />
+          </Route>
           <Route
             path="*"
             element={<NotFound />}

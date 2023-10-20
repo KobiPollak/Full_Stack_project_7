@@ -7,15 +7,13 @@ import "../styles/details.css";
 const Details = () => {
   const { id } = useParams();
 
-  const [response, setResponse] = useState("");
-  const [loading, setLoading] = useState(false);
+  axios.defaults.headers.common["authorization"] =
+    localStorage.getItem("token");
 
-  const handleGetData = () => {
-    setLoading(true);
+    const [response, setResponse] = useState("");
 
-    // Make the Axios request to your server API
-  };
   useEffect(() => {
+    console.log("useEffect in details");
     // Function to fetch data using Axios
     axios
       .get(`http://localhost:3100/users/userDetails/${id}`)
@@ -25,9 +23,6 @@ const Details = () => {
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
-      })
-      .finally(() => {
-        setLoading(false);
       });
 
     // fetchData(); // Call the fetch function on component mount
