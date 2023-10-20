@@ -18,6 +18,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Select,
 } from '@mui/material';
 import axios from 'axios';
 
@@ -37,7 +38,7 @@ const MReports = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:3100/manager/allProperties')
+      .get(`http://localhost:3100/manager/${id}/allProperties`)
       .then((response) => {
         setPropertyOptions(response.data);
       });
@@ -53,12 +54,12 @@ const MReports = () => {
 
   const handleFormSubmit = () => {
     axios
-      .get('http://localhost:3100/manager/reportsData', {
-        property_id: selectedPropertyOption,
-        description: description,
-        status: 'Open',
-        type: selectedOption,
-        location: location,
+    .get(`http://localhost:3100/manager/reportsData/${id}`, {
+        params: {
+          property_id: selectedPropertyOption,
+          status: 'Open',
+          type: selectedOption,
+        },
       })
       .then((response) => {
         setReportData(response.data);
@@ -66,6 +67,21 @@ const MReports = () => {
       .catch((error) => {
         console.error(error);
       });
+  };
+
+  const handleStatusChange = (reportId, status) => {
+    axios
+      .put(`http://localhost:3100/manager/updateReportStatus/${reportId}`, {
+        status: status,
+      })
+      .then((response) => {
+        // Handle the response if needed
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    handleFormSubmit();
   };
 
   const options = [
@@ -121,7 +137,7 @@ const MReports = () => {
                   key={option.id}
                   value={option.id}
                 >
-                  {option.id}
+                  {option.id}, {option.city}, {option.address}
                 </MenuItem>
               ))}
             </TextField>
@@ -157,7 +173,18 @@ const MReports = () => {
                     <TableCell>{report.property_id}</TableCell>
                     <TableCell>{report.description}</TableCell>
                     <TableCell>{report.date_reported}</TableCell>
-                    <TableCell>{report.status}</TableCell>
+                    <TableCell>
+                      <Select
+                        value={report.status}
+                        onChange={(event) =>
+                          handleStatusChange(report.id, event.target.value)
+                        }
+                      >
+                        <MenuItem value="Open">Open</MenuItem>
+                        <MenuItem value="In Progress">In Progress</MenuItem>
+                        <MenuItem value="Closed">Closed</MenuItem>
+                      </Select>
+                    </TableCell>
                     <TableCell>{report.type}</TableCell>
                     <TableCell>{report.location}</TableCell>
                     <TableCell>{report.image_path}</TableCell>
@@ -166,6 +193,13 @@ const MReports = () => {
               </TableBody>
             </Table>
           </TableContainer>
+           {/* <Button
+            variant="contained"
+            color="primary"
+            onClick={handleUpdateStatus}
+          >
+            Update Status
+          </Button> */}
         </Container>
       )}
     </div>

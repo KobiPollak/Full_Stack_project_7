@@ -55,6 +55,7 @@ export default function DrawerAppBar(props: Props) {
         break;
       case "Reports":
         // Code to handle "Reports" menu option
+        navigate(`/m-application/${id}/managerReports`);
         console.log("Navigating to Reports page");
         break;
       case "Log Out":

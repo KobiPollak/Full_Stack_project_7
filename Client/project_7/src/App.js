@@ -74,7 +74,7 @@ function App() {
             element={<ManagerApplication />}
             >
             <Route
-              path="/m-application/managerReports"
+              path="/m-application/:id/managerReports"
               element={<MReports />}
             />
           </Route>

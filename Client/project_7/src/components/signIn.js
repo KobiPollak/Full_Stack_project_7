@@ -44,7 +44,7 @@ export default function SignIn() {
         })
         .then((user) => {
           console.log(user.data);
-          localStorage.setItem(`${user.data.email}`, user.data.accessToken);
+          localStorage.setItem("token", user.data.accessToken);
           navigate(`/application/${user.data.id}`);
         })
         .catch((err) => alert(err));
@@ -58,7 +58,7 @@ export default function SignIn() {
         })
         .then((user) => {
           console.log(user.data);
-          localStorage.setItem(`${user.data.email}`, user.data.accessToken);
+          localStorage.setItem("token", user.data.accessToken);
           navigate(`/m-application/${user.data.id}`);
         })
         .catch((err) => alert(err));

@@ -16,7 +16,7 @@ async function checkManagerLogIn(req, res) {
       return res.status(200).json({
         accessToken: accessToken,
         email: managerForDb.email,
-        id: table[0][0].id,
+        id: table[0][0].manager_id,
       });
     })
     .catch((err) => console.log(err));
