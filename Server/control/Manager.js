@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-import { managerLogIn } from "../models/managerDB.js";
+import { managerLogIn, getManagerDetails } from "../models/managerDB.js";
 
 async function checkManagerLogIn(req, res) {
   const managerForDb = req.body;
@@ -22,9 +22,22 @@ async function checkManagerLogIn(req, res) {
     .catch((err) => console.log(err));
 }
 
-async function getProperties(){
+function managerDetails(req, res) {
   const id = req.params.id;
-  aw
+  console.log(id);
+  getManagerDetails(id)
+    .then((data) => {
+      if (data[0].length === 0) {
+        return res.status(401).send({ error: "manager doesn't exist." });
+      }
+      res.status(200).json(data[0][0]);
+    })
+    .catch((err) => console.log(err));
 }
 
-export { checkManagerLogIn };
+// async function getProperties(){
+//   const id = req.params.id;
+//   await
+// }
+
+export { checkManagerLogIn, managerDetails };

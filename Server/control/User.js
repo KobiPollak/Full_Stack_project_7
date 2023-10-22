@@ -6,11 +6,12 @@ import {
   createPaymentTransactionDb,
   getPropertyIdByTenantId,
   depositDb,
-} from "../models/userDB.js";
-import jwt from "jsonwebtoken";
+} from '../models/userDB.js';
+
+import jwt from 'jsonwebtoken';
 
 async function doesUserExist(req, res, next) {
-  console.log("in function doesUserExist");
+  console.log('in function doesUserExist');
   //   try {
   // console.log('hey beck');
   // console.log(req);
@@ -20,7 +21,7 @@ async function doesUserExist(req, res, next) {
     .then((user) => {
       console.log(user[0]);
       if (user[0].length > 0) {
-        return res.status(401).send({ error: "user is exists." });
+        return res.status(401).send({ error: 'user is exists.' });
       }
       next();
     })
@@ -30,7 +31,7 @@ async function doesUserExist(req, res, next) {
     });
 }
 async function getUser(req, res, next) {
-  console.log("in function getUser");
+  console.log('in function getUser');
   //   try {
   // console.log('hey beck');
   // console.log(req);
@@ -40,7 +41,7 @@ async function getUser(req, res, next) {
     .then((user) => {
       console.log(user[0]);
       if (user[0].length > 0) {
-        return res.status(401).send({ error: "user is exists." });
+        return res.status(401).send({ error: 'user is exists.' });
       }
       next();
     })
@@ -50,7 +51,7 @@ async function getUser(req, res, next) {
     });
 }
 async function getUserByEmailAndPassword(req, res) {
-  console.log("in function getUserByEmailAndPassword");
+  console.log('in function getUserByEmailAndPassword');
   const userForDb = req.body;
   const user = await getUserByEmail(userForDb)
     .then((table) => {
@@ -80,19 +81,18 @@ async function usersDetails(req, res) {
     return res.status(200).json(data[0][0]);
   });
 }
-
 async function addReport(req, res) {
-  console.log("in function addReport");
+  console.log('in function addReport');
   try {
     const data = await insertNewReport(req);
     console.log(data[0].insertId);
     return res
-    .status(200)
-    .json({ message: `your report number is: ${data[0].insertId}` });
-} catch (error) {
-  console.error('Error adding report:', error);
-  return res.status(500).json({ error: 'Error adding report' });
-}
+      .status(200)
+      .json({ message: `your report number is: ${data[0].insertId}` });
+  } catch (error) {
+    console.error('Error adding report:', error);
+    return res.status(500).json({ error: 'Error adding report' });
+  }
 }
 
 async function createPaymentTransaction(req, res, next) {
@@ -106,15 +106,14 @@ async function createPaymentTransaction(req, res, next) {
     return res.status(500).send(err.message);
   }
 }
-
 async function deposit(req, res) {
   console.log('in function deposit');
+
   const property_id = await getPropertyIdByTenantId(req.body.id);
   console.log('property id:' + property_id);
   const depos = await depositDb(property_id, req.body.amount);
-  return res.status(200).send('Deposit succeeded.');
+  return res.status(200).send('Deposit succes');
 }
-
 export {
   doesUserExist,
   getUserByEmailAndPassword,

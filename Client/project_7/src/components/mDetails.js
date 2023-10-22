@@ -7,43 +7,41 @@ import "../styles/details.css";
 const MDetails = () => {
   const { id } = useParams();
 
+  axios.defaults.headers.common["authorization"] =
+    localStorage.getItem("token");
+
   const [response, setResponse] = useState("");
-  const [properties, setProperties] = useState("");
+  const [properties, setProperties] = useState([]);
 
   useEffect(() => {
     // Function to fetch data using Axios
     axios
-      .get(`http://localhost:3100/users/userDetails/${id}`)
+      .get(`http://localhost:3100/manager/${id}/managerDetails`)
       .then((response) => {
-        console.log(response);
+        console.log(response.data);
         setResponse(response.data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
-      })
-      .finally(() => {
-        setLoading(false);
       });
     axios
-      .get(`http://localhost:3100/maneger/propertiesDetails/${id}`)
+      .get(`http://localhost:3100/manager/${id}/allProperties`)
       .then((response) => {
-        setProperties(response);
+        setProperties(response.data);
+        console.log(response.data);
       })
       .catch((err) => console.log("Error fetching data:", err));
-
-    // fetchData(); // Call the fetch function on component mount
   }, []); // Empty dependency array means it will run only once on mount
 
   return (
     <>
-      {/* <Card> */}
-      <div className="user-card">
+      <div className="user-card" style={{ paddingTop: "350px" }}>
         <div className="user-header">
           <h2>personal information:</h2>
         </div>
         <div className="user-body">
           <p>
-            <strong>Full Name:</strong> {response.fullName}
+            <strong>Full Name:</strong> {response.full_name}
           </p>
           <p>
             <strong>Email:</strong> {response.email}
@@ -57,70 +55,22 @@ const MDetails = () => {
       <Card> */}
       <div className="user-card">
         <div className="user-header">
-          <h2>properties under your information:</h2>
+          <h2>properties under your responsibility:</h2>
         </div>
-        {/* <div className="user-body">
-          <p>
-            <strong>Address:</strong> {response.address}
-          </p>
-          <p>
-            <strong>City:</strong> {response.city}
-          </p>
-          <p>
-            <strong>Apartment:</strong> {response.apartment}
-          </p>
-        </div> */}
-        <table>
-          <thead>
-            <tr>
-              {Object.keys(properties[0]).map((key) => (
-                <th key={key}>{key}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {properties.map((item, index) => (
-              <tr key={index}>
-                {Object.values(item).map((value, index) => (
-                  <td key={index}>{value}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {properties.map((property) => (
+          <div className="user-body">
+            <p>
+              <strong>Property Id:</strong> {property.id}
+            </p>
+            <p>
+              <strong>Address:</strong> {property.address}
+            </p>
+            <p>
+              <strong>City:</strong> {property.city}
+            </p>
+          </div>
+        ))}
       </div>
-      <div className="user-card">
-        <div className="user-header">
-          <h2>Garbage Removal Times:</h2>
-        </div>
-        <div className="user-body">
-          <p>
-            <strong>Day:</strong> {response.day_of_week}
-          </p>
-          <p>
-            <strong>Time:</strong> {response.collection_time}
-          </p>
-        </div>
-      </div>
-      <div className="user-header">
-        <h2>General Payment Details:</h2>
-      </div>
-      <div className="user-body">
-        <p>
-          <strong>Fixed monthly amount:</strong> {response.base_payment_amount}
-        </p>
-        <p>
-          <strong>Extra Payment Amount:</strong>{" "}
-          {response.extra_payment_amount ? response.extra_payment_amount : 0}
-        </p>
-        <p>
-          <strong>Reason For Extra payment:</strong>{" "}
-          {response.extra_payment_description
-            ? response.extra_payment_description
-            : "There is no extras this month"}
-        </p>
-      </div>
-      {/* </Card> */}
     </>
   );
 };

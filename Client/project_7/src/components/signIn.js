@@ -145,8 +145,7 @@ export default function SignIn() {
               Sign In
             </Button>
             <Grid container>
-              <Grid item xs>
-              </Grid>
+              <Grid item xs></Grid>
               <Grid item>
                 <Link
                   style={{ cursor: "pointer" }}

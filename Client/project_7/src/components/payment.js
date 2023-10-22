@@ -34,6 +34,7 @@ const PaymentPage = () => {
   const { id } = useParams();
 
   const navigate = useNavigate();
+
   const defaultTheme = createTheme();
 
   const handleSelectChange = (event) => {
@@ -117,104 +118,104 @@ const PaymentPage = () => {
               getOptionLabel={(option) => option.label}
               renderInput={(params) => (
                 <TextField
-                {...params}
-                label="Card Type"
-                fullWidth
-                required
-                inputProps={{
-                  ...params.inputProps,
-                  id: 'card-type-input',
-                }}
-                />
-                )}
-                />
-    
-                <TextField
-                  id="card-number"
-                  label="Card Number"
+                  {...params}
+                  label="Card Type"
                   fullWidth
                   required
+                  inputProps={{
+                    ...params.inputProps,
+                    id: 'card-type-input',
+                  }}
                 />
-    
-                <TextField
-                  id="card-holder-name"
-                  label="Card Holder Name"
-                  fullWidth
-                  required
-                />
-    
-                <TextField
-                id="expiration-year"
-                label="Expiration Year"
-                fullWidth
-                required
-                type="number" // Set the type as "number" to accept only numbers
-                inputProps={{
-                  maxLength: 4, // Limit input to 4 characters for year
-                  inputMode: 'numeric',
-                  min: 1, // Set the minimum value to 1
-                  max: 9999, // Set the maximum value to 9999
-                }}
-              />
-  
-              <TextField
-               id="expiration-month"
-               label="Expiration Month"
-               fullWidth
-               required
-               type="number" // Set the type as "number" to accept only numbers
-               inputProps={{
-                 maxLength: 2, // Limit input to 2 characters for month
-                 inputMode: 'numeric',
-                 min: 1, // Set the minimum value to 1
-                 max: 12, // Set the maximum value to 12
-               }}
-             />
- 
-             <TextField
-                id="cvv"
-                label="CVV"
-                fullWidth
-                required
-              />
-  
-              <TextField
-               id="amount"
-               label="Amount to Pay"
-               fullWidth
-               required
-               type="number" // Set the type as "number" to accept only numbers
-               inputProps={{
-                 inputMode: 'numeric', // Enforce numeric input on mobile devices that support it
-               }}
-             />
- 
-             <FormControl
-               fullWidth
-               variant="outlined"
-             >
-               <InputLabel>Reason for payments</InputLabel>
-               <Select
-                 value={selectedValue}
-                 onChange={handleSelectChange}
-                 label="Reason for payments"
-               >
-                 <MenuItem value="">None</MenuItem>
-                 <MenuItem value="extra payment">extra payment</MenuItem>
-                 <MenuItem value="basepayment">basepayment</MenuItem>
-               </Select>
-             </FormControl>
- 
-             <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                fullWidth
-                id="submit-payment-btn"
+              )}
+            />
+
+            <TextField
+              id="card-number"
+              label="Card Number"
+              fullWidth
+              required
+            />
+
+            <TextField
+              id="card-holder-name"
+              label="Card Holder Name"
+              fullWidth
+              required
+            />
+
+            <TextField
+              id="expiration-year"
+              label="Expiration Year"
+              fullWidth
+              required
+              type="number" // Set the type as "number" to accept only numbers
+              inputProps={{
+                maxLength: 4, // Limit input to 4 characters for year
+                inputMode: 'numeric',
+                min: 1, // Set the minimum value to 1
+                max: 9999, // Set the maximum value to 9999
+              }}
+            />
+
+            <TextField
+              id="expiration-month"
+              label="Expiration Month"
+              fullWidth
+              required
+              type="number" // Set the type as "number" to accept only numbers
+              inputProps={{
+                maxLength: 2, // Limit input to 2 characters for month
+                inputMode: 'numeric',
+                min: 1, // Set the minimum value to 1
+                max: 12, // Set the maximum value to 12
+              }}
+            />
+
+            <TextField
+              id="cvv"
+              label="CVV"
+              fullWidth
+              required
+            />
+
+            <TextField
+              id="amount"
+              label="Amount to Pay"
+              fullWidth
+              required
+              type="number" // Set the type as "number" to accept only numbers
+              inputProps={{
+                inputMode: 'numeric', // Enforce numeric input on mobile devices that support it
+              }}
+            />
+
+            <FormControl
+              fullWidth
+              variant="outlined"
+            >
+              <InputLabel>Reason for payments</InputLabel>
+              <Select
+                value={selectedValue}
+                onChange={handleSelectChange}
+                label="Reason for payments"
               >
-                   Submit Payment
+                <MenuItem value="">None</MenuItem>
+                <MenuItem value="extra payment">extra payment</MenuItem>
+                <MenuItem value="basepayment">basepayment</MenuItem>
+              </Select>
+            </FormControl>
+
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              id="submit-payment-btn"
+            >
+              Submit Payment
             </Button>
-            </form>
+          </form>
         </Grid>
       </Grid>
     </ThemeProvider>

@@ -1,45 +1,39 @@
-import { useParams, useNavigate, Outlet } from 'react-router-dom';
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
-import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import MenuIcon from '@mui/icons-material/Menu';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-
-interface Props {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
-  window?: () => Window;
-}
+import { useParams, useNavigate, Outlet } from "react-router-dom";
+import * as React from "react";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import CssBaseline from "@mui/material/CssBaseline";
+import Divider from "@mui/material/Divider";
+import Drawer from "@mui/material/Drawer";
+import IconButton from "@mui/material/IconButton";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import MenuIcon from "@mui/icons-material/Menu";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 
 const drawerWidth = 240;
-const navItems = ['Home', 'Payments', 'Contact', 'Reports', 'Log Out'];
+const navItems = ["Details", "Payments", "Reports", "Log Out"];
 
-export default function DrawerAppBar(props: Props) {
+export default function DrawerAppBar(props) {
   const { window } = props;
   const { id } = useParams();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const navigate = useNavigate();
+  const [showContent, setShowContent] = React.useState(true);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
 
   const handleNavItemClicked = (item) => {
+    setShowContent(false);
     // alert(item);
     switch (item) {
-      case "Home":
+      case "Details":
         navigate(`/application/${id}/details`);
         // Code to handle "Home" menu option
         console.log("Navigating to Home page");
@@ -49,10 +43,6 @@ export default function DrawerAppBar(props: Props) {
         // Code to handle "About" menu option
         console.log("Navigating to About page");
         break;
-      case "Contact":
-        // Code to handle "Contact" menu option
-        console.log("Navigating to Contact page");
-        break;
       case "Reports":
         navigate(`/application/${id}/reports`);
         // Code to handle "Reports" menu option
@@ -60,7 +50,7 @@ export default function DrawerAppBar(props: Props) {
         break;
       case "Log Out":
         // Code to handle "Log Out" menu option
-        localStorage.removeItem(`${id}`);
+        localStorage.removeItem("token");
         navigate(`/signIn`);
         console.log("Logging out...");
         break;
@@ -70,24 +60,15 @@ export default function DrawerAppBar(props: Props) {
   };
 
   const drawer = (
-    <Box
-      onClick={handleDrawerToggle}
-      sx={{ textAlign: 'center' }}
-    >
-      <Typography
-        variant="h6"
-        sx={{ my: 2 }}
-      >
+    <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
+      <Typography variant="h6" sx={{ my: 2 }}>
         My-Home
       </Typography>
       <Divider />
       <List>
         {navItems.map((item) => (
-          <ListItem
-          key={item}
-          disablePadding
-        >
-          <ListItemButton sx={{ textAlign: 'center' }}>
+          <ListItem key={item} disablePadding>
+            <ListItemButton sx={{ textAlign: "center" }}>
               <ListItemText
                 primary={item}
                 onClick={() => handleNavItemClicked(item)}
@@ -103,7 +84,16 @@ export default function DrawerAppBar(props: Props) {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box
+      sx={{
+        display: "flex",
+        height: "100vh",
+        backgroundImage: `url(https://www.coloradorpm.com/wp-content/uploads/2020/05/image-1.jpg)`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       <CssBaseline />
       <AppBar component="nav">
         <Toolbar>
@@ -156,9 +146,30 @@ export default function DrawerAppBar(props: Props) {
           {drawer}
         </Drawer>
       </Box>
-      <Box component="main" sx={{ p: 3 }}>
+      <Box
+        component="main"
+        sx={{
+          p: 3,
+          flexGrow: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "rgba(255, 255, 255, 0.8)", // Add a semi-transparent background to the content
+        }}
+      >
         <Toolbar />
-        {/* <Typography>text...</Typography> */}
+        {showContent ? (
+          <Box sx={{ textAlign: "center" }}>
+            <Typography variant="h4">
+              Welcome to Your Property Management Page
+            </Typography>
+            <Typography variant="body1">
+              You can manage your property details, payments, and fill out a
+              fault reports from here.
+            </Typography>
+          </Box>
+        ) : null}
         <Outlet />
       </Box>
     </Box>

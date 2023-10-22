@@ -41,7 +41,7 @@ const GoodPayment = ({ userId }) => {
           variant="body1"
           style={messageStyle}
         >
-          התשלום הועבר בהצלחה
+          !!התשלום הועבר בהצלחה
         </Typography>
       )}
     </div>

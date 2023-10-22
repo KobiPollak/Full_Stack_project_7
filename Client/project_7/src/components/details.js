@@ -10,11 +10,13 @@ const Details = () => {
   axios.defaults.headers.common["authorization"] =
     localStorage.getItem("token");
 
-    const [response, setResponse] = useState("");
+  const [response, setResponse] = useState("");
 
   useEffect(() => {
     console.log("useEffect in details");
     // Function to fetch data using Axios
+    // axios.defaults.headers.common["Authorization"] = "Bearer YOUR_ACCESS_TOKEN";
+    // console.log(localStorage.getItem("token"));
     axios
       .get(`http://localhost:3100/users/userDetails/${id}`)
       .then((response) => {
@@ -24,14 +26,12 @@ const Details = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-
-    // fetchData(); // Call the fetch function on component mount
   }, []); // Empty dependency array means it will run only once on mount
 
   return (
     <>
       {/* <Card> */}
-      <div className="user-card">
+      <div className="user-card" style={{ paddingTop: "350px" }}>
         <div className="user-header">
           <h2>personal information:</h2>
         </div>

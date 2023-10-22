@@ -15,44 +15,38 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 
-// interface Props {
-//   /**
-//    * Injected by the documentation to work in an iframe.
-//    * You won't need it on your project.
-//    */
-//   window?: () => Window;
-// }
-
 const drawerWidth = 240;
-const navItems = ["Home", "Payments", "Contact", "Reports", "Log Out"];
+const navItems = ["Home", "Payments", "Management", "Reports", "Log Out"];
 
-export default function DrawerAppBar(props: Props) {
+export default function DrawerAppBar(props) {
   const { window } = props;
   const { id } = useParams();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const navigate = useNavigate();
+  const [showContent, setShowContent] = React.useState(true);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
 
   const handleNavItemClicked = (item) => {
-    // alert(item);
+    setShowContent(false);
     switch (item) {
       case "Home":
-        navigate(`/application/${id}/details`);
+        navigate(`/m-application/${id}/details`);
         // Code to handle "Home" menu option
-        console.log("Navigating to Home page");
+        console.log("Navigating to manager details page");
         break;
       case "Payments":
-        navigate(`/application/${id}/payment`);
+        navigate(`/m-application/${id}/managerPayment`);
         // Code to handle "About" menu option
         console.log("Navigating to About page");
         break;
-      case "Contact":
-        // Code to handle "Contact" menu option
+      case "Management":
+        navigate(`/m-application/${id}/management`);
         console.log("Navigating to Contact page");
         break;
+
       case "Reports":
         // Code to handle "Reports" menu option
         navigate(`/m-application/${id}/managerReports`);
@@ -94,7 +88,16 @@ export default function DrawerAppBar(props: Props) {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box
+      sx={{
+        display: "flex",
+        height: "100vh",
+        backgroundImage: `url(https://www.coloradorpm.com/wp-content/uploads/2020/05/image-1.jpg)`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       <CssBaseline />
       <AppBar component="nav">
         <Toolbar>
@@ -147,9 +150,30 @@ export default function DrawerAppBar(props: Props) {
           {drawer}
         </Drawer>
       </Box>
-      <Box component="main" sx={{ p: 3 }}>
+      <Box
+        component="main"
+        sx={{
+          p: 3,
+          flexGrow: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "rgba(255, 255, 255, 0.8)", // Add a semi-transparent background to the content
+        }}
+      >
         <Toolbar />
-        {/* <Typography>text...</Typography> */}
+        {showContent ? (
+          <Box sx={{ textAlign: "center" }}>
+            <Typography variant="h4">
+              Welcome to Your Property Management Page
+            </Typography>
+            <Typography variant="body1">
+              You can manage your property details, payments, and see all your
+              properties fault reports from here.
+            </Typography>
+          </Box>
+        ) : null}
         <Outlet />
       </Box>
     </Box>

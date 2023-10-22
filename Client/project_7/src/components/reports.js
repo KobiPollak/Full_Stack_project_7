@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { useParams, useNavigate, Outlet } from "react-router-dom";
+import React, { useState } from 'react';
+import { useParams, useNavigate, Outlet } from 'react-router-dom';
+
 import {
   AppBar,
   Toolbar,
@@ -11,13 +12,14 @@ import {
   MenuItem,
   createTheme,
   ThemeProvider,
-} from "@mui/material";
-import axios from "axios";
+} from '@mui/material';
+import axios from 'axios';
 // import { makeStyles } from "@mui/styles";
 
 const Reports = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+
   //   const classes = useStyles();
   //   const theme = createTheme({
   //     fileInput: {
@@ -31,12 +33,12 @@ const Reports = () => {
   //       cursor: "pointer",
   //     },
   //   });
-  axios.defaults.headers.common["authorization"] =
-  localStorage.getItem("token");
+  axios.defaults.headers.common['authorization'] =
+    localStorage.getItem('token');
 
-  const [selectedOption, setSelectedOption] = useState("");
-  const [location, setLocation] = useState("");
-  const [description, setDescription] = useState("");
+  const [selectedOption, setSelectedOption] = useState('');
+  const [location, setLocation] = useState('');
+  const [description, setDescription] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
 
   const handleOptionChange = (event) => {
@@ -44,9 +46,9 @@ const Reports = () => {
   };
 
   const handleInputChange = (event) => {
-    if (event.target.name === "location") {
+    if (event.target.name === 'location') {
       setLocation(event.target.value);
-    } else if (event.target.name === "description") {
+    } else if (event.target.name === 'description') {
       setDescription(event.target.value);
     }
   };
@@ -65,38 +67,37 @@ const Reports = () => {
   };
 
   const handleGenerateReport = () => {
-    console,log("in handleGenerateReport function")
     if (!selectedImage) {
       return;
     }
     const formData = new FormData();
     console.log(id);
-    formData.append("id", id);
-    formData.append("image", selectedImage);
-    formData.append("description", description);
-    formData.append("location", location);
-    formData.append("type", selectedOption);
+    formData.append('id', id);
+    formData.append('image', selectedImage);
+    formData.append('description', description);
+    formData.append('location', location);
+    formData.append('type', selectedOption);
 
     const headers = {
-      "Content-Type": "multipart/form-data", // Important for file upload
-      Authorization: localStorage.getItem("token"), // Set your token here
+      'Content-Type': 'multipart/form-data', // Important for file upload
+      Authorization: localStorage.getItem('token'), // Set your token here
     };
-      
+
     axios
-      .post("http://localhost:3100/users/report", formData, { headers })
+      .post('http://localhost:3100/users/report', formData, { headers })
       .then((response) => {
         // Handle the response from the server if needed
         console.log(response.data.message);
-        navigate(`/application/${id}/goodReport/${response.data.message}`); 
+        navigate(`/application/${id}/goodReport/${response.data.message}`);
       });
 
-    console.log("Generating report...");
+    console.log('Generating report...');
   };
 
   const options = [
-    { value: "maintenance", label: "Maintenance fault" },
-    { value: "cleaning", label: "Cleaning fault" },
-    { value: "special", label: "Special request" },
+    { value: 'maintenance', label: 'Maintenance fault' },
+    { value: 'cleaning', label: 'Cleaning fault' },
+    { value: 'special', label: 'Special request' },
   ];
 
   return (
@@ -104,8 +105,14 @@ const Reports = () => {
       <AppBar position="static"></AppBar>
       <Typography variant="h6">Reports</Typography>
       <Container maxWidth="md">
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
+        <Grid
+          container
+          spacing={2}
+        >
+          <Grid
+            item
+            xs={12}
+          >
             {/* Dropdown to choose from a list */}
             <TextField
               fullWidth
@@ -116,13 +123,19 @@ const Reports = () => {
               onChange={handleOptionChange}
             >
               {options.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
+                <MenuItem
+                  key={option.value}
+                  value={option.value}
+                >
                   {option.label}
                 </MenuItem>
               ))}
             </TextField>
           </Grid>
-          <Grid item xs={12}>
+          <Grid
+            item
+            xs={12}
+          >
             {/* More input fields for additional information */}
             <TextField
               fullWidth
@@ -133,7 +146,10 @@ const Reports = () => {
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid
+            item
+            xs={12}
+          >
             <TextField
               fullWidth
               label="Description"
@@ -143,10 +159,16 @@ const Reports = () => {
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid
+            item
+            xs={12}
+          >
             {/* Drag and drop area for the image */}
-            <div onDragOver={handleDragOver} onDrop={handleDrop}>
-              Drag & drop an image here or{" "}
+            <div
+              onDragOver={handleDragOver}
+              onDrop={handleDrop}
+            >
+              Drag & drop an image here or{' '}
               <label htmlFor="image-upload">choose a file</label>
               <input
                 type="file"
@@ -159,7 +181,7 @@ const Reports = () => {
           </Grid>
         </Grid>
         <Button
-          style={{ marginTop: "10px" }}
+          style={{ marginTop: '10px' }}
           size="large"
           variant="contained"
           color="primary"

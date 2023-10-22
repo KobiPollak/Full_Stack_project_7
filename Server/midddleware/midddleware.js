@@ -1,10 +1,9 @@
 import jwt from "jsonwebtoken";
 
 async function authenticateToken(req, res, next) {
+  console.log("in function authenticateToken");
   const authHeader = req.headers.authorization;
-  // console.log(req.headers.authorization);
-  // const token = authHeader && authHeader.split(" ")[1];
-  // console.log(token);
+
   if (authHeader == null) return res.status(401);
 
   jwt.verify(authHeader, process.env.ACCESS_TOKEN_SECRET, (err, id) => {
@@ -16,7 +15,7 @@ async function authenticateToken(req, res, next) {
 }
 
 function checkReqPaymentData(req, res, next) {
-  console.log('in function checkReqPaymentData');
+  console.log("in function checkReqPaymentData");
 
   console.log(req.body);
   try {
@@ -32,21 +31,21 @@ function checkReqPaymentData(req, res, next) {
       amount,
     } = req.body;
     console.log(cardNumber);
+
     if (!cardNumber) console.log("Missing card number data");
     else if (!id) console.log("Missing id data");
     else if (!expirationMonth) console.log("Missing expiration month data");
     else if (!expirationYear) console.log("Missing expiration year data");
-    else if (!amount) console.log("Missing amount data");
+    else if (!amount) console.log("Missing amont data");
     else if (!cardType) console.log("Missing card type data");
     else if (!cardHolderName) console.log("Missing card holder name data");
     else if (!reason) console.log("Missing reason data");
     else if (!formattedMonth) console.log("Missing formattedMonth data");
   } catch {
-    return res.status(400).json({ error: 'not all the data were submitted' });
+    return res.status(400).json({ error: "not all the data were submitted" });
   }
   next();
 }
-
 function checkReqUserLogUpData(req, res, next) {
   console.log("in function checkReqUserData");
   const { email, password, fullName, address, city, phoneNumber, apartment } =

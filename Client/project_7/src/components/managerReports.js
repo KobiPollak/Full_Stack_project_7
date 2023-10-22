@@ -9,8 +9,6 @@ import {
   Button,
   Grid,
   MenuItem,
-  createTheme,
-  ThemeProvider,
   Paper,
   TableContainer,
   Table,
@@ -19,6 +17,7 @@ import {
   TableRow,
   TableCell,
   Select,
+  Modal,
 } from '@mui/material';
 import axios from 'axios';
 
@@ -35,6 +34,8 @@ const MReports = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [PropertyOptions, setPropertyOptions] = useState([]);
   const [reportData, setReportData] = useState([]);
+  const [selectedStatusOption, setSelectedStatusOption] = useState('');
+  const [selectedReport, setSelectedReport] = useState(null);
 
   useEffect(() => {
     axios
@@ -52,12 +53,16 @@ const MReports = () => {
     setSelectedPropertyOption(event.target.value);
   };
 
+  const handleStatusOptionChange = (event) => {
+    setSelectedStatusOption(event.target.value);
+  };
+
   const handleFormSubmit = () => {
     axios
-    .get(`http://localhost:3100/manager/reportsData/${id}`, {
+      .get(`http://localhost:3100/manager/reportsData/${id}`, {
         params: {
           property_id: selectedPropertyOption,
-          status: 'Open',
+          status: selectedStatusOption,
           type: selectedOption,
         },
       })
@@ -69,26 +74,39 @@ const MReports = () => {
       });
   };
 
-  const handleStatusChange = (reportId, status) => {
-    axios
+  async function handleStatusChange(reportId, status) {
+    await axios
       .put(`http://localhost:3100/manager/updateReportStatus/${reportId}`, {
         status: status,
       })
       .then((response) => {
-        // Handle the response if needed
         console.log(response.data);
       })
       .catch((error) => {
         console.error(error);
       });
     handleFormSubmit();
-  };
+  }
 
   const options = [
     { value: 'maintenance', label: 'Maintenance fault' },
     { value: 'cleaning', label: 'Cleaning fault' },
     { value: 'special', label: 'Special request' },
   ];
+
+  const status_option = [
+    { value: 'Open', label: 'Open' },
+    { value: 'In Progress', label: 'In Progress' },
+    { value: 'Closed', label: 'Closed' },
+  ];
+
+  const handleOpenModal = (report) => {
+    setSelectedReport(report);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedReport(null);
+  };
 
   return (
     <div>
@@ -106,7 +124,6 @@ const MReports = () => {
             item
             xs={12}
           >
-            {/* Dropdown to choose from a list */}
             <TextField
               fullWidth
               select
@@ -114,9 +131,11 @@ const MReports = () => {
               variant="outlined"
               value={selectedOption}
               onChange={handleOptionChange}
+              style={{ width: '100%' }} // Set a fixed width for the text field
             >
               {options.map((option) => (
                 <MenuItem
+                  style={{ width: '100%' }}
                   key={option.value}
                   value={option.value}
                 >
@@ -131,9 +150,11 @@ const MReports = () => {
               variant="outlined"
               value={selectedPropertyOption}
               onChange={handlePropertyOptionChange}
+              style={{ width: '100%' }} // Set a fixed width for the text field
             >
               {PropertyOptions.map((option) => (
                 <MenuItem
+                  style={{ width: '100%' }}
                   key={option.id}
                   value={option.id}
                 >
@@ -141,10 +162,30 @@ const MReports = () => {
                 </MenuItem>
               ))}
             </TextField>
+            <TextField
+              fullWidth
+              select
+              label="Status"
+              value={selectedStatusOption}
+              onChange={handleStatusOptionChange}
+              variant="outlined"
+              style={{ width: '100%' }} // Set a fixed width for the text field
+            >
+              {status_option.map((option) => (
+                <MenuItem
+                  style={{ width: '100%' }}
+                  key={option.value}
+                  value={option.value}
+                >
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
             <Button
               variant="contained"
               color="primary"
               onClick={handleFormSubmit}
+              style={{ width: '100%' }} // Set a fixed width for the button
             >
               Submit
             </Button>
@@ -154,8 +195,11 @@ const MReports = () => {
 
       {reportData.length > 0 && (
         <Container maxWidth="md">
-          <TableContainer component={Paper}>
-            <Table>
+          <TableContainer
+            component={Paper}
+            style={{ maxHeight: '400px', overflowY: 'auto' }}
+          >
+            <Table style={{ tableLayout: 'fixed' }}>
               <TableHead>
                 <TableRow>
                   <TableCell>Property ID</TableCell>
@@ -164,12 +208,13 @@ const MReports = () => {
                   <TableCell>Status</TableCell>
                   <TableCell>Type</TableCell>
                   <TableCell>Location</TableCell>
-                  <TableCell>Image Path</TableCell>
+                  <TableCell>Image</TableCell>
+                  {/* Change the header to 'Image' */}
                 </TableRow>
               </TableHead>
               <TableBody>
                 {reportData.map((report) => (
-                  <TableRow key={report.id}>
+                  <TableRow key={report.fault_id}>
                     <TableCell>{report.property_id}</TableCell>
                     <TableCell>{report.description}</TableCell>
                     <TableCell>{report.date_reported}</TableCell>
@@ -177,31 +222,52 @@ const MReports = () => {
                       <Select
                         value={report.status}
                         onChange={(event) =>
-                          handleStatusChange(report.id, event.target.value)
+                          handleStatusChange(
+                            report.fault_id,
+                            event.target.value
+                          )
                         }
                       >
-                        <MenuItem value="Open">Open</MenuItem>
-                        <MenuItem value="In Progress">In Progress</MenuItem>
-                        <MenuItem value="Closed">Closed</MenuItem>
+                        {status_option.map((option) => (
+                          <MenuItem
+                            key={option.value}
+                            value={option.value}
+                          >
+                            {option.label}
+                          </MenuItem>
+                        ))}
                       </Select>
                     </TableCell>
                     <TableCell>{report.type}</TableCell>
                     <TableCell>{report.location}</TableCell>
-                    <TableCell>{report.image_path}</TableCell>
+                    <TableCell>
+                      <Button onClick={() => handleOpenModal(report)}>
+                        View Image
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
-           {/* <Button
-            variant="contained"
-            color="primary"
-            onClick={handleUpdateStatus}
-          >
-            Update Status
-          </Button> */}
         </Container>
       )}
+
+      {/* Modal Dialog to display the image */}
+      <Modal
+        open={!!selectedReport}
+        onClose={handleCloseModal}
+      >
+        <div>
+          {selectedReport && selectedReport.image && (
+            <img
+              src={selectedReport.image}
+              alt="Report"
+              style={{ maxWidth: '100%' }}
+            />
+          )}
+        </div>
+      </Modal>
     </div>
   );
 };
