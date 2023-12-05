@@ -1,4 +1,4 @@
-# Full_Stack_project_7
+# Maintenance_Management_App
 A full-stack property management system built using React, Material-UI, Node.js, Express, and MySQL, following the MVC (Model-View-Controller) architecture. 
 ## Project Overview 
 The Property Management System is designed to help property management companies efficiently manage their properties and provide tenants with easy access to property details and reporting capabilities.
